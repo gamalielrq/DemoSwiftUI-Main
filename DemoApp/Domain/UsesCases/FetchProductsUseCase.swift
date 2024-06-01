@@ -11,9 +11,9 @@ protocol GetDataType {
 }
 
 class FetchProductsUseCase: GetDataType {
-    private let repository: ProductRepository
+    private let repository: ProductRepositoryType
     
-    init(repository: ProductRepository) {
+    init(repository: ProductRepositoryType) {
         self.repository = repository
     }
     

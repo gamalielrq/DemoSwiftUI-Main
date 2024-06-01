@@ -8,24 +8,25 @@
 import SwiftUI
 
 struct ProductsView: View {
-    var viewModel: ProductViewModel
+    @ObservedObject var viewModel: ProductViewModel
     var flexItemMin: CGFloat = 40
     @State private var numberOfRoads = 3
     @State private var showParentView = false
-        
+    
     var body: some View {
         let columns = Array(
             repeating: GridItem(.flexible(minimum: flexItemMin)),
             count: numberOfRoads
-            )
+        )
         Text("Selecciona el producto de tu interes")
         ScrollView {
+            
             LazyVGrid(columns: columns, spacing: 10 ) {
                 ForEach(viewModel.products.indices, id:\.self) { index in
                     Button(action: {
                         showParentView = true
                     } ){
-                        ItemView(productName: viewModel.products[index].nombre, imagenURL: viewModel.products[index].urlImagenes.first)
+                        ItemView(productName: viewModel.products[index].nombre ?? "", imagenURL: viewModel.products[index].urlImagenes.first)
                     }
                     .fullScreenCover(isPresented: $showParentView){
                         HomeView(isCardVisible: true)
@@ -33,11 +34,16 @@ struct ProductsView: View {
                 }
             }
         }
+        .onAppear {
+            viewModel.onAppear()
+        }
         .padding(.vertical)
+        
     }
 }
 
 struct ItemView: View {
+    //let item: Item
     let productName: String
     let imagenURL: String?
     var body: some View {

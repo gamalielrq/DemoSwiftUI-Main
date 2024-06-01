@@ -7,50 +7,54 @@
 
 import SwiftUI
 
+
 struct HomeView: View {
-   @State private var showChildView = false
-   @State var isCardVisible: Bool = false
+    @State private var showChildView = false
+    @State var isCardVisible: Bool = false
+    
     var body: some View {
         NavigationView {
-                VStack(spacing: 25) {
+            VStack(spacing: 25) {
+                NavigationLink(destination: ProductFactory.createView(), isActive: $showChildView) {
+                    EmptyView()
+                }
+                
+                Button(action: {
+                    showChildView = true
+                }) {
+                    if !isCardVisible {
+                        Text("Obtener catalogo")
+                            .font(.largeTitle)
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(15)
+                    }
+                }
+                
+                if isCardVisible {
+                    CardView()
+                        .padding(.horizontal)
                     Button(action: {
                         showChildView = true
                     }) {
-                        if !isCardVisible {
-                            Text("Obtener catalogo").font(.largeTitle)
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(15)
-                        }
-                    }
-                    
-                    if isCardVisible {
-                        CardView()
-                            .padding(.horizontal)
-                        Button(action: {
-                            showChildView = true
-                        }){
-                            Text("Seleccionar otro producto")
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(15)
-                        }
+                        Text("Seleccionar otro producto")
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(15)
                     }
                 }
+            }
+            .navigationTitle("Home")
+            .navigationBarHidden(false)
+            .navigationBarItems(trailing: Button("Done", action: {
+                print("Right Button")
+            }))
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.automatic)
         }
-        .background(.red)
-        .navigationTitle("Home")
-        .navigationBarHidden(false)
-        .navigationBarItems(trailing: Button("Done", action: {
-                      print("Right Button")
-                  }))
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarTitleDisplayMode(.automatic)
-
-
-       
+        .background(Color.red)
     }
 }
 
@@ -91,5 +95,29 @@ struct CardView: View {
 
 #Preview {
     HomeView()
+    
+}
 
+
+class ProductFactory {
+    static func createView() -> ProductsView {
+        return ProductsView(viewModel: createViewModel())
+    }
+    
+    private static func createViewModel() -> ProductViewModel {
+        return ProductViewModel(getData: createUseCase())
+    }
+    
+    private static func createUseCase() -> GetDataType {
+        return FetchProductsUseCase(repository: createRepository())
+    }
+    
+    private static func createRepository() -> ProductRepositoryType {
+        return ProductRepository(apiDataSource: createDataSource(), domainDataMapper: ProductDataMapper())
+    }
+    
+    private static func createDataSource() -> ApiDataSourceType {
+        let httpClient = MiddlewareClient()
+        return ApiDataSource(middlewareClient: httpClient)
+    }
 }

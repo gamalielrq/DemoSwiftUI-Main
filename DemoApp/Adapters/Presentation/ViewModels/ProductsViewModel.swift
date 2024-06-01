@@ -11,7 +11,7 @@ class ProductViewModel: ObservableObject {
     @Published var products: [ProductoEntity] = []
     
     private let getData: GetDataType
-
+    
     
     init(getData: GetDataType) {
         self.getData = getData
@@ -27,14 +27,10 @@ class ProductViewModel: ObservableObject {
             
             Task { @MainActor in
                 
-                guard let pageContent = content.resultado?.first?.productos else {
-                    debugPrint("--- Error al presentar productod2")
-                    return
-                }
-                self.products = pageContent
-                }
-               
+                self.products = content.resultado.productos
             }
             
         }
+        
     }
+}

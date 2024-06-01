@@ -14,12 +14,12 @@ class ProductDataMapper {
         let mensaje = dto.mensaje
         let folio = dto.folio
         let advertencia = dto.advertencia
-        let resultado = dto.resultado.map { mapResultadoDTOToResultoEntity($0) }
+        let resultado = mapResultadoDTOToResultoEntity(dto.resultado)
         return APIResponseEntity(codigo: codigo, mensaje: mensaje, folio: folio, advertencia: advertencia, resultado: resultado)
     }
     
     private func mapResultadoDTOToResultoEntity(_ dto: ResultDTO) -> ResultEntity {
-        let paginacion = dto.paginacion.map { mapPaginacionDTOToPaginacionntity($0) }
+        let paginacion = mapPaginacionDTOToPaginacionntity(dto.paginacion)
         let categoria = dto.categoria
         let productos = dto.productos.map { mapProductoDTOToProductoEntity($0)}
         return ResultEntity(paginacion: paginacion, categoria: categoria, productos: productos)
@@ -68,9 +68,8 @@ class ProductDataMapper {
         let montoDescuentoBanco = dto.montoDescuentoBanco
         let precio = dto.precio
         let montoAbonoDigital = dto.montoAbonoDigital
-
+        
         return AbonoSemanalEntity(plazo: plazo, montoAbono: montoAbono, montoDescuentoAbono: montoDescuentoAbono, montoUltimoAbono: montoUltimoAbono, montoFinalCredito: montoFinalCredito, idPromocion: idPromocion, montoDescuentoElektra: montoDescuentoElektra, montoDescuentoBanco: montoDescuentoBanco, precio: precio, montoAbonoDigital: montoAbonoDigital)
     }
     
-   
 }

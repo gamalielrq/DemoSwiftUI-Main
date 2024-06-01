@@ -8,10 +8,10 @@
 import Foundation
 
 protocol ApiDataSourceType {
-    func getData() async -> Result<Data, NetworkError>
+    func getData() async -> Result<APIResponseDTO, NetworkError>
 }
 
-class ApiDataSource {
+class ApiDataSource: ApiDataSourceType {
     private let middlewareClient: MiddlewareClientType
     
     init(middlewareClient: MiddlewareClientType) {
@@ -27,8 +27,8 @@ class ApiDataSource {
         switch result {
         case .success(let data):
             do {
-                let decodedUsers = try JSONDecoder().decode(APIResponseDTO.self, from: data)
-                return .success(decodedUsers)
+                let decodedProducts = try JSONDecoder().decode(APIResponseDTO.self, from: data)
+                return .success(decodedProducts)
             } catch {
                 return .failure(.invalidData)
             }
@@ -36,6 +36,5 @@ class ApiDataSource {
             return .failure(.invalidData)
         }
     }
-
+    
 }
-

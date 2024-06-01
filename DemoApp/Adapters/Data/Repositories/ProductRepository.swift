@@ -13,10 +13,10 @@ protocol ProductRepositoryType {
 
 class ProductRepository: ProductRepositoryType {
     
-    private let apiDataSource: ApiDataSource
+    private let apiDataSource: ApiDataSourceType
     private let domainDataMapper: ProductDataMapper
     
-    init(apiDataSource: ApiDataSource, domainDataMapper: ProductDataMapper) {
+    init(apiDataSource: ApiDataSourceType, domainDataMapper: ProductDataMapper) {
         self.apiDataSource = apiDataSource
         self.domainDataMapper = domainDataMapper
     }
